@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Analysis</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="heading-container">
+    <div class="heading">
+            <h1>Improve Your Pronunciation</h1>
+            <form action="/record_and_plot" method="post" id="recordForm">
+                <input type="submit" value="Record and Plot" class="record-btn" id="recordBtn">
+            </form>            
+            <p id="loadingMessage" style="display: none;">Loading, please wait...</p>
+        </div>
+        <div class="banner-img">
+            <img src="{{ url_for('static', filename='speech.jpeg') }}" alt="Banner Image">
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="plot">
+            {% if result_data %}
+                <img src="{{ url_for('static', filename='linguistics.png') }}" alt="Side Image" class="side-img">
+                <p>Transcription: {{ result_data.transcription }}</p>
+            {% endif %}
+            {% if waveform_data %}
+                <img src="data:image/png;base64,{{ waveform_data }}" alt="Audio Waveform">
+            {% else %}
+                <p>No data available yet.</p>
+            {% endif %}
+        </div>
+
+        <div class="transcription-info">
+            {% if result_data %}
+                <img src="{{ url_for('static', filename='listen.png') }}" alt="Side Image" class="side-img">
+                <p>Pitch Analysis</p>
+            {% endif %}
+            {% if pitch_data %}
+                <img src="data:image/png;base64,{{ pitch_data }}" alt="Pitch Analysis">
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('recordBtn').addEventListener('click', function() {
+            document.getElementById('loadingMessage').style.display = 'block'; 
+            document.body.classList.add('loadingCursor'); 
+        });
+    </script>    
+
+</body>
+</html>
+

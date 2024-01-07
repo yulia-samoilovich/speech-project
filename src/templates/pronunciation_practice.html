@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronunciation Practice</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="title">
+        <h1>English Pronunciation Practice</h1>
+    <p>Learn to pronounce challenging sounds in English with the examples below.</p>
+    </div>
+
+    <!-- Pronunciation Categories -->
+    <div class="categories-container">
+        <!-- Example Categories -->
+        <div onclick="fetchPronunciations('The R Sound')" class="category-item">
+            <span class="phonetic-symbol">[ɹ]</span>
+            <p>The R Sound</p>
+        </div>
+        <div onclick="fetchPronunciations('Short I Sound')" class="category-item">
+            <span class="phonetic-symbol">[ɪ]</span>
+            <p>Short I Sound</p>            
+        </div>
+        <div onclick="fetchPronunciations('Long I Sound')" class="category-item">
+            <span class="phonetic-symbol">[I:]</span>
+            <p>Long I Sound</p>
+        </div>
+        <div onclick="fetchPronunciations('What kind of car do you want to drive Mr. Foreigner?')" class="category-item">
+            <span class="phonetic-symbol">[ ]</span>
+            <p>Phrase</p>
+        </div>
+    </div>
+
+    <!-- Container for Pronunciation Exercises -->
+    <div id="pronunciation-list"></div>
+
+    <div class="references">
+        <h3>IPA References</h3>
+        <div class="ipa-img">
+            <img src="{{ url_for('static', filename='ipa.png') }}" alt="Page Image">
+        </div>
+    </div>
+
+    <script>
+        function fetchPronunciations(category) {
+            fetch('/pronunciation_practice/' + category)
+                .then(response => response.json())
+                .then(data => {
+                    var listHtml = '';
+                    data.forEach(function(exercise) {
+                        listHtml += `<div class="exercise-card">
+                                        <p class="exercise-text">${exercise.word_or_phrase}</p>
+                                        <audio controls>
+                                            <source src="${exercise.pronunciationUrl}" type="audio/mpeg">
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    </div>`;
+                    });
+                    document.getElementById('pronunciation-list').innerHTML = listHtml;
+                })
+                .catch(error => {
+                    console.error('Error fetching pronunciation:', error);
+                });
+        }
+    </script>    
+
+</body>
+</html>
